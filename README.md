@@ -6,6 +6,22 @@
 
 ---
 
+## 📸 Screenshots
+
+| Real-Time Dashboard | My Voter Checklist |
+| :---: | :---: |
+| <img src="screenshots/dashboard.png" alt="Dashboard" width="400"/> | <img src="screenshots/checklist.png" alt="Checklist" width="400"/> |
+
+| AI Election Assistant | Learn the System |
+| :---: | :---: |
+| <img src="screenshots/assistant.png" alt="AI Assistant" width="400"/> | <img src="screenshots/learn.png" alt="Education Hub" width="400"/> |
+
+| Knowledge Quiz | |
+| :---: | :---: |
+| <img src="screenshots/quiz.png" alt="Quiz" width="400"/> | |
+
+---
+
 ## 🌟 Key Features
 
 1. **Real-Time Dashboard & Simulation**
