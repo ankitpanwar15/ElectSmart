@@ -17,6 +17,7 @@ const ASSETS_TO_CACHE = [
 
 // Install Event - Cache assets
 self.addEventListener('install', (event) => {
+    self.skipWaiting(); // Force the waiting service worker to become the active service worker
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log('Opened cache');
@@ -28,21 +29,31 @@ self.addEventListener('install', (event) => {
 // Activate Event - Clean up old caches
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('Deleting old cache:', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
+        Promise.all([
+            // Clean up old caches
+            caches.keys().then((cacheNames) => {
+                return Promise.all(
+                    cacheNames.map((cacheName) => {
+                        if (cacheName !== CACHE_NAME) {
+                            console.log('Deleting old cache:', cacheName);
+                            return caches.delete(cacheName);
+                        }
+                    })
+                );
+            }),
+            // Take control of all open clients immediately
+            self.clients.claim()
+        ])
     );
 });
 
 // Fetch Event - Serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
+    // Only handle http/https requests to avoid errors with chrome-extension:// and other protocols
+    if (!event.request.url.startsWith('http')) {
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request).then((response) => {
             // Return cached version if found
@@ -52,28 +63,32 @@ self.addEventListener('fetch', (event) => {
 
             // Otherwise try to fetch from network
             return fetch(event.request).then(
-                (response) => {
+                (networkResponse) => {
                     // Check if we received a valid response
-                    if (!response || response.status !== 200 || response.type !== 'basic') {
-                        return response;
+                    if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+                        return networkResponse;
                     }
 
                     // IMPORTANT: Clone the response. A response is a stream
                     // and because we want the browser to consume the response
                     // as well as the cache consuming the response, we need
                     // to clone it so we have two streams.
-                    var responseToCache = response.clone();
+                    var responseToCache = networkResponse.clone();
 
                     caches.open(CACHE_NAME).then((cache) => {
-                        // Don't cache extension protocols or external APIs in this basic setup
-                        if (event.request.url.startsWith('http')) {
-                            cache.put(event.request, responseToCache);
-                        }
+                        cache.put(event.request, responseToCache);
                     });
 
-                    return response;
+                    return networkResponse;
                 }
-            );
+            ).catch(() => {
+                // Return a fallback or just let it fail silently if it's not a critical resource
+                // For a more advanced PWA, you could return an offline.html here
+                return new Response('Network error occurred', {
+                    status: 408,
+                    headers: { 'Content-Type': 'text/plain' }
+                });
+            });
         })
     );
 });

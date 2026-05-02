@@ -25,15 +25,25 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initFeatures() {
-    initNotifications();
-    initSimulation();
-    initChecklist();
-    initChat();
-    initEducation();
-    initQuiz();
-    initNews();
-    initLanguageToggle();
-    startHeartbeat();
+    const features = [
+        { name: 'Notifications', init: initNotifications },
+        { name: 'Simulation', init: initSimulation },
+        { name: 'Checklist', init: initChecklist },
+        { name: 'Chat', init: initChat },
+        { name: 'Education', init: initEducation },
+        { name: 'Quiz', init: initQuiz },
+        { name: 'News', init: initNews },
+        { name: 'Language Toggle', init: initLanguageToggle },
+        { name: 'Heartbeat', init: startHeartbeat }
+    ];
+
+    features.forEach(feature => {
+        try {
+            feature.init();
+        } catch (error) {
+            console.error(`Feature [${feature.name}] failed to initialize:`, error);
+        }
+    });
 }
 
 function initTheme() {
@@ -64,7 +74,11 @@ function initNavigation() {
     const navItems = document.querySelectorAll('.nav-links li');
     const sections = document.querySelectorAll('.view-section');
 
-    function navigateTo(targetId) {
+    function navigateTo(targetId, updateHash = true) {
+        // Find if the target section exists
+        const targetSection = document.getElementById(targetId);
+        if (!targetSection) return;
+
         navItems.forEach(nav => {
             nav.classList.toggle('active', nav.getAttribute('data-target') === targetId);
         });
@@ -82,10 +96,34 @@ function initNavigation() {
         
         // Scroll content area to top
         document.querySelector('.scrollable-content')?.scrollTo(0, 0);
+
+        // Update URL hash if requested
+        if (updateHash) {
+            window.location.hash = targetId;
+        }
     }
 
+    // Handle clicks on navigation items
     navItems.forEach(item => {
         item.addEventListener('click', () => navigateTo(item.getAttribute('data-target')));
+    });
+
+    // Handle initial hash on load
+    window.addEventListener('load', () => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) {
+            navigateTo(hash, false);
+        }
+    });
+
+    // Handle browser back/forward buttons
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) {
+            navigateTo(hash, false);
+        } else {
+            navigateTo('dashboard', false); // Default
+        }
     });
 }
 
