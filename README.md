@@ -121,3 +121,11 @@ The application includes a `Dockerfile` utilizing an `nginx:alpine` image to ser
 ```bash
 gcloud run deploy electsmart --source . --region us-central1 --allow-unauthenticated --port=80
 ```
+
+---
+
+## 📝 License
+
+This project is for educational purposes. Feel free to use and modify it.
+
+Built with ❤️ by Antigravity AI Assistant.
