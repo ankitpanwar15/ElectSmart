@@ -1,6 +1,13 @@
-// Quiz Module
+/**
+ * @module Quiz
+ * Handles the interactive knowledge quiz feature including scoring and feedback.
+ */
 
-const quizData = [
+/**
+ * Quiz dataset containing questions, options, correct indices, and explanations.
+ * @const {Array<Object>}
+ */
+export const quizData = [
     {
         question: "What does EVM stand for?",
         options: [
@@ -57,52 +64,85 @@ let currentQuestion = 0;
 let score = 0;
 let hasAnswered = false;
 
-function initQuiz() {
-    document.getElementById('next-q-btn').addEventListener('click', handleNextQuestion);
-    document.getElementById('restart-quiz').addEventListener('click', startQuiz);
+/**
+ * Initializes the quiz module listeners and state.
+ */
+export function initQuiz() {
+    const nextBtn = document.getElementById('next-q-btn');
+    const restartBtn = document.getElementById('restart-quiz');
+    const qTotalEl = document.getElementById('q-total');
+
+    if (nextBtn) nextBtn.addEventListener('click', handleNextQuestion);
+    if (restartBtn) restartBtn.addEventListener('click', startQuiz);
+    if (qTotalEl) qTotalEl.textContent = quizData.length;
     
-    // Set total questions
-    document.getElementById('q-total').textContent = quizData.length;
     startQuiz();
 }
 
-function startQuiz() {
+/**
+ * Resets and starts the quiz from the first question.
+ */
+export function startQuiz() {
     currentQuestion = 0;
     score = 0;
     hasAnswered = false;
     
-    document.getElementById('score-val').textContent = score;
-    document.getElementById('quiz-container').classList.remove('hidden');
-    document.getElementById('result-container').classList.add('hidden');
+    const scoreValEl = document.getElementById('score-val');
+    const quizContainer = document.getElementById('quiz-container');
+    const resultContainer = document.getElementById('result-container');
+
+    if (scoreValEl) scoreValEl.textContent = score;
+    if (quizContainer) quizContainer.classList.remove('hidden');
+    if (resultContainer) resultContainer.classList.add('hidden');
     
     loadQuestion();
 }
 
+/**
+ * Loads the current question data into the UI.
+ * @private
+ */
 function loadQuestion() {
     hasAnswered = false;
     const q = quizData[currentQuestion];
     
-    document.getElementById('q-current').textContent = currentQuestion + 1;
-    document.getElementById('question-text').textContent = q.question;
-    
+    const qCurrentEl = document.getElementById('q-current');
+    const qTextEl = document.getElementById('question-text');
     const optionsContainer = document.getElementById('options-container');
-    optionsContainer.innerHTML = '';
-    
-    q.options.forEach((opt, index) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.textContent = opt;
-        btn.addEventListener('click', () => selectOption(index, btn));
-        optionsContainer.appendChild(btn);
-    });
-    
     const feedbackEl = document.getElementById('quiz-feedback');
-    feedbackEl.classList.add('hidden');
-    feedbackEl.className = 'quiz-feedback hidden';
+    const nextBtn = document.getElementById('next-q-btn');
+
+    if (qCurrentEl) qCurrentEl.textContent = currentQuestion + 1;
+    if (qTextEl) qTextEl.textContent = q.question;
     
-    document.getElementById('next-q-btn').classList.add('hidden');
+    if (optionsContainer) {
+        optionsContainer.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            btn.setAttribute('aria-label', `Option ${index + 1}: ${opt}`);
+            btn.addEventListener('click', () => selectOption(index, btn));
+            fragment.appendChild(btn);
+        });
+        optionsContainer.appendChild(fragment);
+    }
+    
+    if (feedbackEl) {
+        feedbackEl.classList.add('hidden');
+        feedbackEl.className = 'quiz-feedback hidden';
+    }
+    
+    if (nextBtn) nextBtn.classList.add('hidden');
 }
 
+/**
+ * Validates the selected option and provides immediate feedback.
+ * @param {number} selectedIndex - The index of the chosen option.
+ * @param {HTMLElement} btnEl - The button element that was clicked.
+ * @private
+ */
 function selectOption(selectedIndex, btnEl) {
     if (hasAnswered) return;
     hasAnswered = true;
@@ -110,27 +150,32 @@ function selectOption(selectedIndex, btnEl) {
     const q = quizData[currentQuestion];
     const buttons = document.querySelectorAll('.option-btn');
     const feedbackEl = document.getElementById('quiz-feedback');
+    const nextBtn = document.getElementById('next-q-btn');
+    const scoreValEl = document.getElementById('score-val');
     
-    // Disable all buttons
     buttons.forEach(btn => btn.disabled = true);
     
     if (selectedIndex === q.correct) {
         btnEl.classList.add('correct');
         score++;
-        document.getElementById('score-val').textContent = score;
-        feedbackEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <strong>Correct!</strong> ${q.explanation}`;
+        if (scoreValEl) scoreValEl.textContent = score;
+        feedbackEl.textContent = `Correct! ${q.explanation}`;
         feedbackEl.classList.add('success');
     } else {
         btnEl.classList.add('wrong');
-        buttons[q.correct].classList.add('correct'); // Highlight correct answer
-        feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <strong>Incorrect.</strong> ${q.explanation}`;
+        buttons[q.correct].classList.add('correct'); 
+        feedbackEl.textContent = `Incorrect. ${q.explanation}`;
         feedbackEl.classList.add('error');
     }
     
     feedbackEl.classList.remove('hidden');
-    document.getElementById('next-q-btn').classList.remove('hidden');
+    if (nextBtn) nextBtn.classList.remove('hidden');
 }
 
+/**
+ * Proceeds to the next question or shows results if at the end.
+ * @private
+ */
 function handleNextQuestion() {
     currentQuestion++;
     
@@ -141,12 +186,19 @@ function handleNextQuestion() {
     }
 }
 
+/**
+ * Transitions to the final results view with a summary message.
+ * @private
+ */
 function showResults() {
-    document.getElementById('quiz-container').classList.add('hidden');
+    const quizContainer = document.getElementById('quiz-container');
     const resultContainer = document.getElementById('result-container');
-    resultContainer.classList.remove('hidden');
-    
-    document.getElementById('final-score').textContent = `${score} / ${quizData.length}`;
+    const finalScoreEl = document.getElementById('final-score');
+    const resultMessageEl = document.getElementById('result-message');
+
+    if (quizContainer) quizContainer.classList.add('hidden');
+    if (resultContainer) resultContainer.classList.remove('hidden');
+    if (finalScoreEl) finalScoreEl.textContent = `${score} / ${quizData.length}`;
     
     let message = "";
     const percentage = score / quizData.length;
@@ -155,5 +207,5 @@ function showResults() {
     else if (percentage >= 0.6) message = "Great job! You know the system well.";
     else message = "Good effort! Check out the 'Learn System' section to brush up.";
     
-    document.getElementById('result-message').textContent = message;
+    if (resultMessageEl) resultMessageEl.textContent = message;
 }

@@ -1,8 +1,8 @@
-# ElectSmart India 🇮🇳
+# Electo AI India 🇮🇳
 
-**ElectSmart India** is a Progressive Web Application (PWA) designed to serve as an interactive educational hub and a real-time dashboard for the Indian Election System. Built entirely using Vanilla Web Technologies (HTML, CSS, JS), it demonstrates offline-first capabilities, interactive simulations, and multi-language support.
+**Electo AI India** is a Progressive Web Application (PWA) designed to serve as an interactive educational hub and a real-time dashboard for the Indian Election System. Built entirely using Vanilla Web Technologies (HTML, CSS, JS), it demonstrates offline-first capabilities, interactive simulations, and multi-language support.
 
-**Live Demo:** [https://electsmart-253016050079.us-central1.run.app](https://electsmart-253016050079.us-central1.run.app)
+**Live Demo:** [https://electo-ai-253016050079.asia-south1.run.app](https://electo-ai-253016050079.asia-south1.run.app)
 
 ---
 
@@ -22,94 +22,83 @@
 
 ---
 
-## 🌟 Key Features
+## 🚀 Technical Excellence
 
-1. **Real-Time Dashboard & Simulation**
-   - Live crowd density mapping for various polling zones.
-   - Dynamic polling place wait time estimations.
-   - **Smart Booth Locator:** Finds your nearest booth and suggests the best time to vote based on live density.
+Electo AI is built with a focus on professional software standards, security, and inclusive design.
 
-2. **Personalized Smart Checklist**
-   - An interactive task manager to track voter deadlines.
-   - Progress is automatically saved locally in your browser.
+### 🏗️ Modular Architecture
+- **ES Modules:** The application is entirely refactored into ES6 Modules, ensuring clean namespace management and efficient dependency handling.
+- **JSDoc Documentation:** Every function and design token is documented using JSDoc standards for maximum maintainability.
+- **Dynamic Imports:** Utilizes code-splitting and dynamic `import()` for optional features like the Google Gemini AI, reducing initial load times.
 
-3. **Interactive Education Hub**
-   - **EVM & VVPAT Simulator:** An interactive mock voting machine complete with audio feedback and a printed VVPAT slip animation.
-   - **Polling Booth Layout Model:** A visual map of the typical polling station and officer responsibilities.
-   - **Process Timeline:** A step-by-step breakdown of the election cycle.
-   - **Flashcards:** Flippable cards for key election terminology.
-   - **Knowledge Quiz:** A scored, multiple-choice quiz with immediate feedback.
-   - **Valid IDs Guide:** A grid of all 11 ECI-approved alternative identity documents.
+### ♿ Accessibility (WCAG 2.1 Compliance)
+- **Multi-Theme Support:** Features a dedicated **Dark/Light Mode** toggle to accommodate users with different visual needs.
+- **Keyboard Navigation:** Implements a "Skip to Content" link and strict `tabindex` management for a fully keyboard-accessible experience.
+- **Semantic HTML:** All interactive elements use appropriate ARIA roles and labels for screen-reader compatibility.
 
-4. **Advanced AI-Powered Chat Assistant**
-   - **Google Gemini Integration:** Dynamically switches between local keyword-based matching and real-time LLM processing using the **Google Gemini 1.5 Flash** model.
-   - **Intelligent Fallback:** Seamlessly transitions to a local knowledge base if offline or if no API key is provided.
+### 🛡️ Security & Performance
+- **Input Sanitization:** Uses `textContent` and `documentFragment` exclusively for dynamic content, providing robust protection against XSS.
+- **Content Security Policy (CSP):** Implements a restrictive CSP meta tag to prevent unauthorized script execution.
+- **Offline-First (PWA):** Robust Service Worker implementation with advanced caching strategies for 100% offline functionality.
 
-5. **PWA Capabilities & System Reliability**
-   - Works fully **offline** thanks to a custom Service Worker.
-   - **System Validation:** Integrated automated testing dashboard (`tests.html`) to verify core logic and asset integrity.
-   - **Cache Management:** User-facing tools to manage and clear application cache.
-
-6. **Inclusive & Accessible Design**
-   - **WCAG Compliance:** Comprehensive ARIA labeling, keyboard navigation support, and high-contrast accessibility focus states.
-   - **Seamless Language Toggle:** Real-time dynamic translation between **English** and **Hindi** via the Google Translate API.
+### 🧪 Automated Quality Assurance
+- **Validation Dashboard:** A dedicated `/tests.html` suite performs real-time integrity checks on state management, data schemas, and PWA readiness.
 
 ---
 
-## 🏗️ Architecture
+## 🌟 Key Features
+- **AI Election Assistant:** Powered by **Google Gemini 1.5 Flash**, providing context-aware answers with local knowledge base fallback.
+- **Interactive EVM Simulator:** A high-fidelity Electronic Voting Machine simulation with VVPAT paper trail animation and audio feedback.
+- **Real-Time Dashboard:** Simulated crowd density monitoring and booth queue estimation.
+- **Smart Checklist:** Personalized voter preparation guide with LocalStorage persistence.
+- **Multilingual Support:** Instant Hindi/English toggle via Google Translate API integration.
 
-Below is a high-level representation of the application's component architecture and data flow:
+---
+
+## 🏗️ Logic & Data Flow
 
 ```mermaid
 graph TD
     subgraph UI[User Interface]
-        DB[Dashboard & Simulations]
-        CL[Smart Checklist]
-        ED[Educational Modules]
-        CH[AI Chat Simulator]
+        DB[Dashboard]
+        CL[Checklist]
+        ED[Education]
+        CH[AI Chat]
     end
 
-    subgraph Logic[Core Logic]
-        app[app.js - Routing & State]
-        sim[simulation.js]
-        i18n[Google Translate Engine]
+    subgraph Modules[ES Modules]
+        app[app.js - Orchestrator]
+        js_sim[simulation.js]
+        js_chat[chat.js - Gemini]
+        js_notif[notifications.js]
     end
 
-    subgraph Storage[Browser Storage]
-        LS[(Local Storage)]
-        Cache[(Service Worker Cache)]
+    subgraph Storage[System Services]
+        LS[(LocalStorage)]
+        SW[(Service Worker)]
+        GT[Google Translate]
     end
 
-    %% Flow
-    DB --> sim
-    sim --> app
+    %% Connections
+    app --> js_sim
+    app --> js_chat
+    app --> js_notif
+    CH --> js_chat
     CL --> LS
-    ED -. Static Data .-> ED
-    app --> Cache
-
-    %% PWA and Translation
-    UI --> i18n
-    Cache -- Offline Assets --> UI
+    UI --> GT
+    SW -- Offline-First --> UI
 ```
 
 ---
 
 ## 🎯 Chosen Vertical
-**Social Impact & Civic Tech / Citizen Engagement**
-This project targets the democratization of information. By simplifying complex election procedures and providing real-time simulated guidance, ElectSmart aims to increase voter turnout and reduce friction at polling stations.
-
-## 🧠 Approach and Logic
-*   **PWA First:** We chose a Progressive Web App approach to ensure the solution is lightweight, mobile-friendly, and capable of working in areas with poor internet connectivity (offline mode).
-*   **Real-Time Modeling:** The dashboard uses a simulation engine to demonstrate how crowdsourced data could be used to optimize voter movement and reduce wait times.
-*   **Gamified Education:** We replaced long manuals with interactive EVM simulators and quizzes to make learning about the democratic process engaging for young and first-time voters.
-*   **Google Services Integration:** 
-    *   **Google Cloud Run:** Used for highly scalable, serverless deployment of the application container.
-    *   **Google Translate API:** Integrated to provide instant Hindi/English switching, making the app inclusive for India's diverse linguistic landscape.
+**Election Process Education & Support**
+This project targets the democratization of information. By simplifying complex election procedures and providing real-time simulated guidance, Electo AI aims to increase voter turnout and reduce friction at polling stations.
 
 ## 📌 Assumptions Made
-*   **Data Availability:** The real-time dashboard logic assumes that a crowdsourced or official API for booth congestion would be available in a production scenario.
-*   **Modern Browsers:** The app assumes users have access to browsers that support Service Workers and the Web Audio API (for the EVM beep).
-*   **One-Time Sync:** It assumes the user has internet access at least once to "install" the PWA and load the translation scripts.
+- **Data Availability:** The real-time dashboard logic assumes that a crowdsourced or official API for booth congestion would be available in a production scenario.
+- **Modern Browsers:** The app assumes users have access to browsers that support Service Workers and the Web Audio API (for the EVM beep).
+- **One-Time Sync:** It assumes the user has internet access at least once to "install" the PWA and load the translation scripts.
 
 ---
 
@@ -137,7 +126,7 @@ Because the application is built with standard web technologies, there are no he
 
 ## 🧪 Testing & Validation
 
-To ensure the highest level of reliability and security, ElectSmart includes a dedicated **Automated Test Dashboard**. 
+To ensure the highest level of reliability and security, Electo AI includes a dedicated **Automated Test Dashboard**. 
 - **View Tests:** Open `tests.html` in your browser or click the vial icon in the sidebar.
 - **Scope:** Validates Geolocation logic, LocalStorage persistence, Quiz data integrity, and Service Worker registration.
 
@@ -156,7 +145,7 @@ The application includes a `Dockerfile` utilizing an `nginx:alpine` image to ser
 
 **Deploy to Google Cloud Run:**
 ```bash
-gcloud run deploy electsmart --source . --region us-central1 --allow-unauthenticated --port=80
+gcloud run deploy electo-ai --source . --region asia-south1 --allow-unauthenticated --port=8080
 ```
 
 ---

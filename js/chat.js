@@ -1,22 +1,40 @@
-// AI Chat Assistant - Integrated with Google Gemini API
+/**
+ * @module Chat
+ * Handles the AI Assistant interaction using Google Gemini API with premium persona.
+ */
+
 let GEMINI_API_KEY = localStorage.getItem('gemini_api_key') || '';
 
+const SYSTEM_PROMPT = `You are Electo, the advanced AI Election Companion for India.
+Your mission is to empower citizens with accurate, neutral, and easy-to-understand information about the electoral process.
+
+Tone Guidelines:
+- Professional yet approachable (Namaste!).
+- Non-partisan: Never express opinions on political parties or candidates.
+- Clear: Use simple analogies for complex rules (like MCC or VVPAT).
+- Encouraging: Remind users of the power of their vote.
+
+Specific Instructions:
+1. If asked about voter registration, mention voters.eci.gov.in.
+2. If asked about documents, list the 12 approved photo IDs.
+3. Use markdown (bold, lists) for readability.
+4. Keep responses concise but comprehensive.`;
+
 const knowledgeBase = {
-    "vvpat": "VVPAT stands for Voter Verifiable Paper Audit Trail. It is an independent system attached to the EVM that allows voters to verify that their votes are cast as intended. When a vote is cast, a slip is printed containing the serial number, name, and symbol of the candidate.",
-    "evm": "EVM stands for Electronic Voting Machine. It is used to record votes digitally in Indian elections, replacing the traditional paper ballot system to make the process faster and reduce invalid votes.",
-    "register": "To register to vote, you must be an Indian citizen aged 18 or above. You can register online through the National Voters' Services Portal (NVSP) by filling out Form 6, or via the Voter Helpline App.",
-    "model code of conduct": "The Model Code of Conduct (MCC) is a set of guidelines issued by the Election Commission of India for candidates and political parties during elections to ensure free and fair polling. It comes into effect as soon as the election schedule is announced.",
-    "eci": "The Election Commission of India (ECI) is an autonomous constitutional authority responsible for administering election processes in India at national, state and district levels.",
-    "delimitation": "Delimitation is the act of redrawing boundaries of Lok Sabha and state Assembly seats to represent changes in population. The main objective is to provide equal representation to equal segments of a population."
+    "vvpat": "Voter Verifiable Paper Audit Trail (VVPAT) is an independent system attached with the EVM that allows voters to verify their vote. A slip is displayed for 7 seconds showing the choice made.",
+    "evm": "Electronic Voting Machines (EVM) consist of a Control Unit and a Balloting Unit. They are tamper-proof and have been used in India since 1982.",
+    "mcc": "Model Code of Conduct (MCC) are guidelines issued by the ECI for political parties to ensure free and fair elections. It kicks in the moment elections are announced.",
+    "epic": "EPIC is your Voter ID card. However, you can vote with 11 other IDs if your name is in the electoral roll.",
+    "nota": "None of the Above (NOTA) allows you to reject all candidates. It's a powerful tool for democratic expression.",
+    "age": "You must be 18 years old on the qualifying date (usually Jan 1st of the year) to register as a voter."
 };
 
-function initChat() {
+export function initChat() {
     const input = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
 
     if (!input || !sendBtn) return;
 
-    // Send on Enter
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') handleSend();
     });
@@ -29,48 +47,65 @@ async function handleSend() {
     const text = input.value.trim();
     if (!text) return;
 
-    // Add user message
     appendMessage(text, 'user');
     input.value = '';
 
-    // Show typing indicator
     const chatContainer = document.getElementById('chat-messages');
     const typingMsg = document.createElement('div');
     typingMsg.className = 'message bot typing';
-    typingMsg.innerHTML = '<i class="fa-solid fa-ellipsis fa-fade"></i> AI is thinking...';
+    typingMsg.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
     typingMsg.id = 'typing-indicator';
     chatContainer.appendChild(typingMsg);
     chatContainer.scrollTop = chatContainer.scrollHeight;
 
     try {
         const response = await getAIResponse(text);
-        
-        const indicator = document.getElementById('typing-indicator');
-        if(indicator) indicator.remove();
-        
+        document.getElementById('typing-indicator')?.remove();
         appendMessage(response, 'bot');
     } catch (error) {
         console.error('AI Error:', error);
-        const indicator = document.getElementById('typing-indicator');
-        if(indicator) indicator.remove();
-        appendMessage("I'm having trouble connecting to my brain right now. Here's a quick answer from my local database: " + getLocalFallback(text), 'bot');
+        document.getElementById('typing-indicator')?.remove();
+        appendMessage("I'm experiencing a brief connection issue. " + getLocalFallback(text), 'bot');
     }
 }
 
-function appendMessage(text, sender) {
+function formatMarkdown(text) {
+    // Simple markdown-to-HTML formatter
+    return text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>')
+        .replace(/^- (.*)/gm, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+}
+
+export function appendMessage(text, sender) {
     const container = document.getElementById('chat-messages');
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${sender}`;
-    // Security: Use textContent for user messages to prevent XSS
-    msgDiv.textContent = text;
+    
+    if (sender === 'bot') {
+        msgDiv.innerHTML = formatMarkdown(text);
+    } else {
+        msgDiv.textContent = text;
+    }
+    
     container.appendChild(msgDiv);
     container.scrollTop = container.scrollHeight;
+    
+    // Animate message entry
+    msgDiv.style.opacity = '0';
+    msgDiv.style.transform = 'translateY(10px)';
+    requestAnimationFrame(() => {
+        msgDiv.style.transition = 'all 0.3s ease';
+        msgDiv.style.opacity = '1';
+        msgDiv.style.transform = 'translateY(0)';
+    });
 }
 
 async function getAIResponse(query) {
-    // If no API key, use fallback immediately
     if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_API_KEY') {
-        return new Promise(resolve => setTimeout(() => resolve(getLocalFallback(query)), 1000));
+        return new Promise(resolve => setTimeout(() => resolve(getLocalFallback(query)), 800));
     }
 
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
@@ -78,12 +113,12 @@ async function getAIResponse(query) {
     const requestBody = {
         contents: [{
             parts: [{
-                text: `You are an Indian Election Assistant. Answer the following user query briefly and helpfully. Query: ${query}`
+                text: `${SYSTEM_PROMPT}\n\nUser Question: ${query}`
             }]
         }],
         generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 200,
+            maxOutputTokens: 800,
         }
     };
 
@@ -104,12 +139,10 @@ function getLocalFallback(query) {
     for (const key in knowledgeBase) {
         if (lowerQuery.includes(key)) return knowledgeBase[key];
     }
-    return "I'm currently in Offline/Lite mode. Please ask about EVM, VVPAT, or Registration, or add a Gemini API Key in settings to enable full AI capabilities.";
+    return "I can certainly help you with that! I'm best at explaining things like EVM, VVPAT, Voter Registration, and the Model Code of Conduct. What specific part of the election process would you like to know more about?";
 }
 
-// Global function for the setup
-window.setGeminiKey = function(key) {
+export function setGeminiKey(key) {
     GEMINI_API_KEY = key;
     localStorage.setItem('gemini_api_key', key);
-    if (window.addNotification) window.addNotification("Gemini AI integration enabled!");
-};
+}

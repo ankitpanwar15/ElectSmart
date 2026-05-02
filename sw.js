@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ElectSmart-v2';
+const CACHE_NAME = 'electo-ai-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -49,12 +49,12 @@ self.addEventListener('fetch', (event) => {
             if (response) {
                 return response;
             }
-            
+
             // Otherwise try to fetch from network
             return fetch(event.request).then(
                 (response) => {
                     // Check if we received a valid response
-                    if(!response || response.status !== 200 || response.type !== 'basic') {
+                    if (!response || response.status !== 200 || response.type !== 'basic') {
                         return response;
                     }
 

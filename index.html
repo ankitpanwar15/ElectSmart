@@ -3,46 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ElectSmart India - Smart Voter Dashboard</title>
-    <meta name="description" content="Interactive guide and real-time dashboard for the Indian Election System.">
+    <title>Electo - Your AI Election Companion</title>
+    <meta name="description" content="Electo: The most advanced AI-powered assistant for the Indian Election System. Interactive, non-partisan, and educational.">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#121212">
-    <!-- Font Awesome for icons -->
+    <meta name="theme-color" content="#0f172a">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body data-theme="light">
+    <!-- Accessibility: Skip to Content -->
+    <a href="#page-title" class="skip-link">Skip to Content</a>
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
             <div class="brand">
-                <i class="fa-solid fa-check-to-slot" aria-hidden="true"></i>
-                <h2>ElectSmart</h2>
+                <i class="fa-solid fa-fingerprint" aria-hidden="true"></i>
+                <h2 data-i18n="brand-name">Electo AI</h2>
             </div>
             <ul class="nav-links">
-                <li class="active" data-target="dashboard" tabindex="0" role="button" aria-label="View Dashboard"><i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span></li>
-                <li data-target="checklist" tabindex="0" role="button" aria-label="My Voter Checklist"><i class="fa-solid fa-list-check"></i> <span>My Checklist</span></li>
-                <li data-target="chat" tabindex="0" role="button" aria-label="AI Election Assistant"><i class="fa-solid fa-robot"></i> <span>AI Assistant</span></li>
-                <li data-target="education" tabindex="0" role="button" aria-label="Learn Election System"><i class="fa-solid fa-book-open"></i> <span>Learn System</span></li>
-                <li data-target="quiz" tabindex="0" role="button" aria-label="Take Knowledge Quiz"><i class="fa-solid fa-graduation-cap"></i> <span>Quiz</span></li>
+                <li class="active" data-target="dashboard" tabindex="0" role="button" aria-label="Dashboard"><i class="fa-solid fa-house-chimney"></i> <span data-i18n="nav-dashboard">Home</span></li>
+                <li data-target="chat" tabindex="0" role="button" aria-label="AI Assistant"><i class="fa-solid fa-robot"></i> <span data-i18n="nav-chat">Ask Electo</span></li>
+                <li data-target="education" tabindex="0" role="button" aria-label="Learning Center"><i class="fa-solid fa-graduation-cap"></i> <span data-i18n="nav-education">Learn</span></li>
+                <li data-target="checklist" tabindex="0" role="button" aria-label="Checklist"><i class="fa-solid fa-list-check"></i> <span data-i18n="nav-checklist">Prep</span></li>
+                <li data-target="quiz" tabindex="0" role="button" aria-label="Quiz"><i class="fa-solid fa-lightbulb"></i> <span data-i18n="nav-quiz">Quiz</span></li>
             </ul>
             <div class="sidebar-footer">
-                <button id="settings-btn" class="icon-btn" aria-label="Open Settings"><i class="fa-solid fa-gear"></i></button>
-                <a href="tests.html" class="icon-btn" aria-label="View Automated Tests" target="_blank"><i class="fa-solid fa-vial"></i></a>
-            </div>
-            <div class="network-status online" id="network-status">
-                <i class="fa-solid fa-wifi"></i> <span>Online</span>
+                <button id="theme-toggle" class="icon-btn" aria-label="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
             </div>
         </nav>
 
         <!-- Main Content Area -->
         <main class="content-area">
             <header>
-                <h1 id="page-title">Real-Time Dashboard</h1>
-                <div class="header-actions" style="display: flex; gap: 15px; align-items: center;">
-                    <button id="lang-toggle" class="btn" style="background-color: var(--border); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; border: 1px solid var(--accent);" aria-label="Toggle Language">हिंदी</button>
-                    <button id="notification-btn" class="icon-btn" aria-label="Notifications">
+                <div class="header-left">
+                    <h1 id="page-title" data-i18n="page-title-dashboard">Information Center</h1>
+                    <div id="system-health" class="health-indicator">
+                        <span class="pulse"></span>
+                        <span class="health-text" data-i18n="system-optimal">AI Online</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="lang-toggle" class="btn primary-btn">English</button>
+                    <button id="notification-btn" class="icon-btn">
                         <i class="fa-regular fa-bell"></i>
                         <span class="badge hidden" id="notif-badge">0</span>
                     </button>
@@ -58,26 +61,49 @@
 
                 <!-- Dashboard Section -->
                 <section id="dashboard" class="view-section active">
+                    <!-- Hero Section -->
+                    <div class="hero-banner">
+                        <h2 data-i18n="hero-title">Empowering Every <span class="accent-text">Voter</span>.</h2>
+                        <p data-i18n="hero-desc">Experience the next generation of election assistance. Non-partisan, accurate, and always ready to help.</p>
+                        <div class="hero-actions">
+                            <button class="btn primary-btn" onclick="document.querySelector('[data-target=chat]').click()"><i class="fa-solid fa-bolt"></i> Start AI Chat</button>
+                            <button class="btn" onclick="document.querySelector('[data-target=education]').click()">Explore Process</button>
+                        </div>
+                    </div>
+
                     <div class="grid-layout">
                         <!-- Booth Locator -->
-                        <div class="card booth-locator-card span-2" style="grid-column: span 3;">
-                            <h3><i class="fa-solid fa-location-crosshairs"></i> Find My Nearest Booth & Best Time</h3>
-                            <div class="booth-locator-content" id="booth-locator-content">
-                                <button id="locate-booth-btn" class="btn primary-btn"><i class="fa-solid fa-location-dot"></i> Locate Me</button>
-                                <div id="booth-result" class="hidden" style="margin-top: 15px;">
-                                    <div style="font-size: 1.2rem; font-weight: bold; color: var(--accent);" id="assigned-booth-name"></div>
-                                    <div style="color: var(--text-muted); margin-bottom: 10px;">Distance: <span id="booth-distance"></span> km</div>
-                                    <div class="movement-suggestion">
-                                        <i class="fa-regular fa-clock"></i>
-                                        <span id="best-time-suggestion"></span>
+                        <div class="card booth-locator-card" style="grid-column: span 3;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3 style="margin-bottom: 5px;"><i class="fa-solid fa-location-crosshairs"></i> <span data-i18n="booth-title">Smart Booth Locator</span></h3>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem;">Find your assigned polling station and real-time wait estimates.</p>
+                                </div>
+                                <button id="locate-booth-btn" class="btn primary-btn"><i class="fa-solid fa-location-dot"></i> <span data-i18n="booth-btn">Locate Me</span></button>
+                            </div>
+                            <div id="booth-result" class="hidden" style="margin-top: 25px; padding: 20px; background: var(--glass-bg); border-radius: var(--radius-md); border: 1px solid var(--border);">
+                                <div style="display: flex; gap: 30px; align-items: center;">
+                                    <div style="flex: 1;">
+                                        <div style="font-size: 1.4rem; font-weight: 800; color: var(--accent);" id="assigned-booth-name"></div>
+                                        <div style="color: var(--text-muted); margin-bottom: 10px;">Distance: <span id="booth-distance"></span> km</div>
+                                    </div>
+                                    <div class="movement-suggestion" style="background: var(--bg-main);">
+                                        <i class="fa-regular fa-clock" style="font-size: 1.5rem;"></i>
+                                        <div>
+                                            <div style="font-size: 0.7rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted);">Best Time to Vote</div>
+                                            <span id="best-time-suggestion" style="font-weight: 700;"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Crowd Density Map Simulator -->
-                        <div class="card map-card span-2">
-                            <h3><i class="fa-solid fa-map-location-dot"></i> Live Polling Zone Density</h3>
+                        <div class="card map-card" style="grid-column: span 2;">
+                            <div class="card-header-flex">
+                                <h3><i class="fa-solid fa-map-location-dot"></i> Live Zone Density</h3>
+                                <span class="live-pill">SIMULATION</span>
+                            </div>
                             <div class="simulation-map" id="density-map">
                                 <!-- Zones will be injected here -->
                             </div>
@@ -89,10 +115,21 @@
 
                         <!-- Wait Times -->
                         <div class="card wait-times-card">
-                            <h3><i class="fa-solid fa-stopwatch"></i> Wait Times</h3>
-                            <ul class="wait-list" id="wait-list">
+                            <h3><i class="fa-solid fa-stopwatch"></i> Current Wait</h3>
+                            <ul class="wait-list" id="wait-list" style="margin-top: 10px;">
                                 <!-- Wait times injected here -->
                             </ul>
+                        </div>
+
+                        <!-- Live News Updates -->
+                        <div class="card news-card-wrapper" style="grid-column: span 3;">
+                            <div class="card-header-flex">
+                                <h3><i class="fa-solid fa-newspaper"></i> <span data-i18n="news-title">Latest Election Updates</span></h3>
+                                <span class="live-pill">LIVE</span>
+                            </div>
+                            <div class="news-feed" id="news-feed">
+                                <!-- News articles injected here -->
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -105,6 +142,7 @@
                             <div class="progress-bar-container">
                                 <div class="progress-bar" id="checklist-progress"></div>
                             </div>
+                            <button id="share-checklist" class="icon-btn" aria-label="Share my readiness status"><i class="fa-solid fa-share-nodes"></i></button>
                         </div>
                         <ul class="task-list" id="task-list">
                             <!-- Tasks injected here -->
@@ -114,51 +152,74 @@
 
                 <!-- AI Chat Section -->
                 <section id="chat" class="view-section hidden">
-                    <div class="chat-container card">
-                        <div class="chat-messages" id="chat-messages">
-                            <div class="message bot">
-                                Hello! I'm your Election Assistant. Ask me anything about the Indian election process, your polling booth, or voter IDs!
+                    <div class="chat-wrapper" style="max-width: 900px; margin: 0 auto;">
+                        <div class="card" style="margin-bottom: 20px; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+                            <div style="display: flex; gap: 20px; align-items: center;">
+                                <div style="width: 60px; height: 60px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white;">
+                                    <i class="fa-solid fa-robot"></i>
+                                </div>
+                                <div>
+                                    <h2 style="margin-bottom: 5px;">Chat with Electo</h2>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem;">Your intelligent, non-partisan election companion.</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="chat-input-area">
-                            <input type="text" id="chat-input" placeholder="Type your question here..." aria-label="Ask a question">
-                            <button id="send-btn" aria-label="Send message"><i class="fa-solid fa-paper-plane"></i></button>
-                        </div>
-                        <div class="suggested-questions">
-                            <span class="chip" tabindex="0" role="button" onclick="document.getElementById('chat-input').value='What is VVPAT?'; document.getElementById('send-btn').click();">What is VVPAT?</span>
-                            <span class="chip" tabindex="0" role="button" onclick="document.getElementById('chat-input').value='How to register to vote?'; document.getElementById('send-btn').click();">How to register?</span>
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chat-messages">
+                                <div class="message bot">
+                                    Namaste! I'm <strong>Electo</strong>. I can help you understand the election process, find your booth, or explain complex terms like VVPAT and MCC. How can I assist you today?
+                                </div>
+                            </div>
+                            <div class="suggested-questions">
+                                <span class="chip" tabindex="0" role="button" onclick="const i=document.getElementById('chat-input'); i.value='What is the Role of a Polling Officer?'; i.focus();">Polling Officer Role?</span>
+                                <span class="chip" tabindex="0" role="button" onclick="const i=document.getElementById('chat-input'); i.value='How to verify my name in the Voter List?'; i.focus();">Verify my name?</span>
+                                <span class="chip" tabindex="0" role="button" onclick="const i=document.getElementById('chat-input'); i.value='Explain VVPAT in simple terms.'; i.focus();">Explain VVPAT</span>
+                            </div>
+                            <div class="chat-input-area">
+                                <input type="text" id="chat-input" placeholder="Ask Electo anything about elections..." aria-label="Ask a question">
+                                <button id="send-btn" class="icon-btn" style="background: var(--accent); color: white; border: none; width: 50px; height: 50px;" aria-label="Send message"><i class="fa-solid fa-paper-plane"></i></button>
+                            </div>
                         </div>
                     </div>
                 </section>
 
                 <!-- Education Section (Timeline & Flashcards) -->
                 <section id="education" class="view-section hidden">
-                    <div class="tabs">
-                        <button class="tab-btn active" data-tab="timeline">Process Timeline</button>
-                        <button class="tab-btn" data-tab="flashcards">Flashcards</button>
-                        <button class="tab-btn" data-tab="evm">EVM Simulator</button>
-                        <button class="tab-btn" data-tab="ids">Accepted IDs</button>
-                        <button class="tab-btn" data-tab="boothmodel">Booth Model</button>
+                    <div class="card" style="margin-bottom: 30px; background: linear-gradient(135deg, var(--bg-card) 0%, var(--glass-bg) 100%);">
+                        <h2 style="margin-bottom: 10px;">Voter Learning Center</h2>
+                        <p style="color: var(--text-muted);">Master the election process through interactive simulations and simplified guides.</p>
+                        <div class="tabs" style="margin-top: 25px;">
+                            <button class="tab-btn active" data-tab="timeline"><i class="fa-solid fa-timeline"></i> Process</button>
+                            <button class="tab-btn" data-tab="flashcards"><i class="fa-solid fa-bolt"></i> Flashcards</button>
+                            <button class="tab-btn" data-tab="evm"><i class="fa-solid fa-desktop"></i> EVM Sim</button>
+                            <button class="tab-btn" data-tab="ids"><i class="fa-solid fa-id-card"></i> Valid IDs</button>
+                            <button class="tab-btn" data-tab="boothmodel"><i class="fa-solid fa-door-open"></i> Booth Model</button>
+                        </div>
                     </div>
                     
                     <div id="tab-timeline" class="tab-content active">
-                        <div class="timeline" id="timeline-container">
+                        <div class="vertical-timeline" id="timeline-container">
                             <!-- Timeline injected here -->
                         </div>
                     </div>
 
                     <div id="tab-flashcards" class="tab-content hidden">
-                        <div class="flashcard-container" id="flashcard-container">
+                        <div class="flashcard-container" id="flashcard-container" style="margin: 0 auto 30px;">
                             <!-- Flashcards injected here -->
                         </div>
                         <div class="flashcard-controls">
-                            <button id="prev-card" class="btn" aria-label="Previous card"><i class="fa-solid fa-arrow-left"></i> Prev</button>
-                            <span id="card-counter">1 / 5</span>
-                            <button id="next-card" class="btn" aria-label="Next card">Next <i class="fa-solid fa-arrow-right"></i></button>
+                            <button id="prev-card" class="btn" aria-label="Previous card"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                            <span id="card-counter" style="font-weight: 700; font-size: 1.1rem;">1 / 5</span>
+                            <button id="next-card" class="btn" aria-label="Next card">Next <i class="fa-solid fa-chevron-right"></i></button>
                         </div>
                     </div>
 
                     <div id="tab-evm" class="tab-content hidden">
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <img src="evm_illustration_1777747465521.png" alt="EVM Machine" style="width: 100%; max-width: 400px; border-radius: var(--radius-md); box-shadow: var(--shadow-premium); margin-bottom: 20px;">
+                            <h3 style="color: var(--accent);">Interactive EVM & VVPAT Simulator</h3>
+                            <p style="color: var(--text-muted);">Cast a mock vote to see how the VVPAT slip confirms your choice.</p>
+                        </div>
                         <div class="evm-simulator-container">
                             <div class="vvpat-machine">
                                 <div class="vvpat-window">
@@ -178,15 +239,17 @@
                                 </div>
                                 <div class="evm-status">
                                     <div class="ready-light" id="evm-ready-light"></div>
-                                    <span>Ready</span>
+                                    <span>Ready to Vote</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div id="tab-ids" class="tab-content hidden">
-                        <h3 style="margin-bottom: 15px; color: var(--accent);">Valid Identity Proofs for Voting</h3>
-                        <p style="margin-bottom: 20px; color: var(--text-muted);">If you don't have your Voter ID (EPIC), you can still vote using any of these 11 alternative photo identity documents approved by the ECI:</p>
+                        <div class="card" style="border-left: 5px solid var(--accent);">
+                            <h3 style="margin-bottom: 10px; color: var(--accent);">No Voter ID? No Problem.</h3>
+                            <p style="color: var(--text-muted);">If you don't have your EPIC card, you can still vote using any of these 11 alternative photo identity documents approved by the ECI:</p>
+                        </div>
                         <div class="id-grid" id="id-grid">
                             <!-- IDs injected via JS -->
                         </div>
@@ -247,49 +310,6 @@
         </main>
     </div>
 
-    <!-- Hidden Google Translate Element -->
-    <div id="google_translate_element" style="display:none;"></div>
-
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="modal hidden" role="dialog" aria-labelledby="settings-title">
-        <div class="modal-content card">
-            <h3 id="settings-title">System Settings</h3>
-            <div class="form-group">
-                <label for="api-key-input">Google Gemini API Key</label>
-                <p class="small-text">Enable advanced AI capabilities by providing your Gemini key.</p>
-                <input type="password" id="api-key-input" placeholder="Enter API Key" aria-label="Gemini API Key">
-            </div>
-            <div class="modal-actions">
-                <button id="save-settings" class="btn primary-btn">Save & Reload</button>
-                <button id="close-settings" class="btn">Close</button>
-            </div>
-            <hr>
-            <div class="system-actions">
-                <button id="clear-cache" class="btn danger-btn">Clear App Cache</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'hi,en', autoDisplay: false}, 'google_translate_element');
-        }
-    </script>
-    <script src="js/notifications.js"></script>
-    <script src="js/simulation.js"></script>
-    <script src="js/checklist.js"></script>
-    <script src="js/chat.js"></script>
-    <script src="js/education.js"></script>
-    <script src="js/quiz.js"></script>
-    <script src="app.js"></script>
-    <!-- Google Translate Script -->
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    
-    <style>
-        /* Hide the top banner added by Google Translate */
-        .VIpgJd-Zvi9od-ORHb-OEVmcd { display: none !important; }
-        body { top: 0 !important; }
-    </style>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
