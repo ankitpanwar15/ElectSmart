@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
     checkNetworkStatus();
     registerServiceWorker();
+    initSettings();
     
     // Initialize feature modules if they exist
     if(typeof initNotifications === 'function') initNotifications();
@@ -15,6 +16,50 @@ document.addEventListener('DOMContentLoaded', () => {
     
     initLanguageToggle();
 });
+
+// Settings & API Management
+function initSettings() {
+    const modal = document.getElementById('settings-modal');
+    const openBtn = document.getElementById('settings-btn');
+    const closeBtn = document.getElementById('close-settings');
+    const saveBtn = document.getElementById('save-settings');
+    const clearBtn = document.getElementById('clear-cache');
+    const keyInput = document.getElementById('api-key-input');
+
+    if (!modal || !openBtn) return;
+
+    // Load existing key
+    keyInput.value = localStorage.getItem('gemini_api_key') || '';
+
+    openBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+    closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+    
+    saveBtn.addEventListener('click', () => {
+        const key = keyInput.value.trim();
+        if (window.setGeminiKey) {
+            window.setGeminiKey(key);
+            modal.classList.add('hidden');
+            // Hard refresh to apply new AI logic
+            setTimeout(() => window.location.reload(), 500);
+        }
+    });
+
+    clearBtn.addEventListener('click', () => {
+        if (confirm('This will delete all offline data and re-download assets. Proceed?')) {
+            if ('serviceWorker' in navigator) {
+                caches.keys().then(names => {
+                    for (let name of names) caches.delete(name);
+                });
+                window.location.reload();
+            }
+        }
+    });
+
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.add('hidden');
+    });
+}
 
 // Language Toggle Logic
 function initLanguageToggle() {
@@ -32,19 +77,10 @@ function initLanguageToggle() {
         if (select) {
             select.value = currentLang;
             select.dispatchEvent(new Event('change'));
-        } else {
-            // Fallback if script hasn't loaded yet
-            setTimeout(() => {
-                const retrySelect = document.querySelector('.goog-te-combo');
-                if (retrySelect) {
-                    retrySelect.value = currentLang;
-                    retrySelect.dispatchEvent(new Event('change'));
-                }
-            }, 1000);
         }
         
         if (window.addNotification) {
-            window.addNotification(currentLang === 'en' ? 'Language switched to English' : 'भाषा बदलकर हिंदी कर दी गई है');
+            window.addNotification(currentLang === 'en' ? 'Language: English' : 'भाषा: हिंदी');
         }
     });
 }
@@ -63,26 +99,39 @@ function initNavigation() {
         'quiz': 'Knowledge Quiz'
     };
 
+    function navigateTo(targetId) {
+        // Update active nav
+        navItems.forEach(nav => {
+            if (nav.getAttribute('data-target') === targetId) {
+                nav.classList.add('active');
+            } else {
+                nav.classList.remove('active');
+            }
+        });
+
+        // Update active section
+        sections.forEach(sec => {
+            if (sec.id === targetId) {
+                sec.classList.remove('hidden');
+                sec.classList.add('active');
+            } else {
+                sec.classList.remove('active');
+                sec.classList.add('hidden');
+            }
+        });
+
+        // Update title
+        pageTitle.textContent = titles[targetId];
+    }
+
     navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            // Update active nav
-            navItems.forEach(nav => nav.classList.remove('active'));
-            item.classList.add('active');
-
-            // Update active section
-            const targetId = item.getAttribute('data-target');
-            sections.forEach(sec => {
-                if (sec.id === targetId) {
-                    sec.classList.remove('hidden');
-                    sec.classList.add('active');
-                } else {
-                    sec.classList.remove('active');
-                    sec.classList.add('hidden');
-                }
-            });
-
-            // Update title
-            pageTitle.textContent = titles[targetId];
+        item.addEventListener('click', () => navigateTo(item.getAttribute('data-target')));
+        
+        // Accessibility: Keyboard support
+        item.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                navigateTo(item.getAttribute('data-target'));
+            }
         });
     });
 }
@@ -90,6 +139,7 @@ function initNavigation() {
 // Network Status Monitoring
 function checkNetworkStatus() {
     const statusEl = document.getElementById('network-status');
+    if (!statusEl) return;
     
     function updateStatus() {
         if (navigator.onLine) {
@@ -103,14 +153,16 @@ function checkNetworkStatus() {
 
     window.addEventListener('online', updateStatus);
     window.addEventListener('offline', updateStatus);
-    updateStatus(); // Initial check
+    updateStatus(); 
 }
 
-// Service Worker Registration for PWA / Offline support
+// Service Worker Registration
 function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker registered successfully.', reg))
-            .catch(err => console.error('Service Worker registration failed:', err));
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('SW Registered'))
+                .catch(err => console.log('SW Fail'));
+        });
     }
 }

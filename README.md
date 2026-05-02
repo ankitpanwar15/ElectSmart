@@ -41,15 +41,18 @@
    - **Knowledge Quiz:** A scored, multiple-choice quiz with immediate feedback.
    - **Valid IDs Guide:** A grid of all 11 ECI-approved alternative identity documents.
 
-4. **AI-Powered Chat Assistant**
-   - A simulated chatbot capable of answering questions about the election process.
+4. **Advanced AI-Powered Chat Assistant**
+   - **Google Gemini Integration:** Dynamically switches between local keyword-based matching and real-time LLM processing using the **Google Gemini 1.5 Flash** model.
+   - **Intelligent Fallback:** Seamlessly transitions to a local knowledge base if offline or if no API key is provided.
 
-5. **PWA Capabilities & Notifications**
+5. **PWA Capabilities & System Reliability**
    - Works fully **offline** thanks to a custom Service Worker.
-   - Supports native browser Push Notifications for urgent alerts.
+   - **System Validation:** Integrated automated testing dashboard (`tests.html`) to verify core logic and asset integrity.
+   - **Cache Management:** User-facing tools to manage and clear application cache.
 
-6. **Seamless Language Toggle**
-   - Real-time dynamic translation between **English** and **Hindi** via the Google Translate API, translating both static content and dynamically injected components.
+6. **Inclusive & Accessible Design**
+   - **WCAG Compliance:** Comprehensive ARIA labeling, keyboard navigation support, and high-contrast accessibility focus states.
+   - **Seamless Language Toggle:** Real-time dynamic translation between **English** and **Hindi** via the Google Translate API.
 
 ---
 
@@ -129,6 +132,21 @@ Because the application is built with standard web technologies, there are no he
 
 3. **Open in browser:**
    Navigate to `http://localhost:8080`
+
+---
+
+## 🧪 Testing & Validation
+
+To ensure the highest level of reliability and security, ElectSmart includes a dedicated **Automated Test Dashboard**. 
+- **View Tests:** Open `tests.html` in your browser or click the vial icon in the sidebar.
+- **Scope:** Validates Geolocation logic, LocalStorage persistence, Quiz data integrity, and Service Worker registration.
+
+---
+
+## 🔒 Security & Accessibility
+- **XSS Protection:** All user-generated content and AI responses are sanitized using `textContent` to prevent script injection.
+- **Credential Safety:** API keys are stored in `localStorage` and handled via `password` masked inputs.
+- **Accessibility:** Fully navigable via keyboard (`Tab`, `Enter`, `Space`) with descriptive ARIA roles for screen readers.
 
 ---
 

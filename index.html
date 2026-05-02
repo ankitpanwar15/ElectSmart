@@ -17,16 +17,20 @@
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
             <div class="brand">
-                <i class="fa-solid fa-check-to-slot"></i>
+                <i class="fa-solid fa-check-to-slot" aria-hidden="true"></i>
                 <h2>ElectSmart</h2>
             </div>
             <ul class="nav-links">
-                <li class="active" data-target="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</li>
-                <li data-target="checklist"><i class="fa-solid fa-list-check"></i> My Checklist</li>
-                <li data-target="chat"><i class="fa-solid fa-robot"></i> AI Assistant</li>
-                <li data-target="education"><i class="fa-solid fa-book-open"></i> Learn System</li>
-                <li data-target="quiz"><i class="fa-solid fa-clipboard-question"></i> Quiz</li>
+                <li class="active" data-target="dashboard" tabindex="0" role="button" aria-label="View Dashboard"><i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span></li>
+                <li data-target="checklist" tabindex="0" role="button" aria-label="My Voter Checklist"><i class="fa-solid fa-list-check"></i> <span>My Checklist</span></li>
+                <li data-target="chat" tabindex="0" role="button" aria-label="AI Election Assistant"><i class="fa-solid fa-robot"></i> <span>AI Assistant</span></li>
+                <li data-target="education" tabindex="0" role="button" aria-label="Learn Election System"><i class="fa-solid fa-book-open"></i> <span>Learn System</span></li>
+                <li data-target="quiz" tabindex="0" role="button" aria-label="Take Knowledge Quiz"><i class="fa-solid fa-graduation-cap"></i> <span>Quiz</span></li>
             </ul>
+            <div class="sidebar-footer">
+                <button id="settings-btn" class="icon-btn" aria-label="Open Settings"><i class="fa-solid fa-gear"></i></button>
+                <a href="tests.html" class="icon-btn" aria-label="View Automated Tests" target="_blank"><i class="fa-solid fa-vial"></i></a>
+            </div>
             <div class="network-status online" id="network-status">
                 <i class="fa-solid fa-wifi"></i> <span>Online</span>
             </div>
@@ -37,7 +41,7 @@
             <header>
                 <h1 id="page-title">Real-Time Dashboard</h1>
                 <div class="header-actions" style="display: flex; gap: 15px; align-items: center;">
-                    <button id="lang-toggle" class="btn" style="background-color: var(--border); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; border: 1px solid var(--accent);">हिंदी</button>
+                    <button id="lang-toggle" class="btn" style="background-color: var(--border); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; border: 1px solid var(--accent);" aria-label="Toggle Language">हिंदी</button>
                     <button id="notification-btn" class="icon-btn" aria-label="Notifications">
                         <i class="fa-regular fa-bell"></i>
                         <span class="badge hidden" id="notif-badge">0</span>
@@ -117,12 +121,12 @@
                             </div>
                         </div>
                         <div class="chat-input-area">
-                            <input type="text" id="chat-input" placeholder="Type your question here...">
-                            <button id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                            <input type="text" id="chat-input" placeholder="Type your question here..." aria-label="Ask a question">
+                            <button id="send-btn" aria-label="Send message"><i class="fa-solid fa-paper-plane"></i></button>
                         </div>
                         <div class="suggested-questions">
-                            <span class="chip" onclick="document.getElementById('chat-input').value='What is VVPAT?'; document.getElementById('send-btn').click();">What is VVPAT?</span>
-                            <span class="chip" onclick="document.getElementById('chat-input').value='How to register to vote?'; document.getElementById('send-btn').click();">How to register?</span>
+                            <span class="chip" tabindex="0" role="button" onclick="document.getElementById('chat-input').value='What is VVPAT?'; document.getElementById('send-btn').click();">What is VVPAT?</span>
+                            <span class="chip" tabindex="0" role="button" onclick="document.getElementById('chat-input').value='How to register to vote?'; document.getElementById('send-btn').click();">How to register?</span>
                         </div>
                     </div>
                 </section>
@@ -148,9 +152,9 @@
                             <!-- Flashcards injected here -->
                         </div>
                         <div class="flashcard-controls">
-                            <button id="prev-card" class="btn"><i class="fa-solid fa-arrow-left"></i> Prev</button>
+                            <button id="prev-card" class="btn" aria-label="Previous card"><i class="fa-solid fa-arrow-left"></i> Prev</button>
                             <span id="card-counter">1 / 5</span>
-                            <button id="next-card" class="btn">Next <i class="fa-solid fa-arrow-right"></i></button>
+                            <button id="next-card" class="btn" aria-label="Next card">Next <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
 
@@ -230,7 +234,7 @@
                             <!-- Options injected here -->
                         </div>
                         <div id="quiz-feedback" class="quiz-feedback hidden"></div>
-                        <button id="next-q-btn" class="btn primary-btn hidden">Next Question</button>
+                        <button id="next-q-btn" class="btn primary-btn hidden" aria-label="Next question">Next Question</button>
                     </div>
                     <div class="card result-card hidden" id="result-container">
                         <h2>Quiz Completed!</h2>
@@ -243,23 +247,44 @@
         </main>
     </div>
 
-    <!-- Scripts -->
     <!-- Hidden Google Translate Element -->
     <div id="google_translate_element" style="display:none;"></div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden" role="dialog" aria-labelledby="settings-title">
+        <div class="modal-content card">
+            <h3 id="settings-title">System Settings</h3>
+            <div class="form-group">
+                <label for="api-key-input">Google Gemini API Key</label>
+                <p class="small-text">Enable advanced AI capabilities by providing your Gemini key.</p>
+                <input type="password" id="api-key-input" placeholder="Enter API Key" aria-label="Gemini API Key">
+            </div>
+            <div class="modal-actions">
+                <button id="save-settings" class="btn primary-btn">Save & Reload</button>
+                <button id="close-settings" class="btn">Close</button>
+            </div>
+            <hr>
+            <div class="system-actions">
+                <button id="clear-cache" class="btn danger-btn">Clear App Cache</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'hi,en', autoDisplay: false}, 'google_translate_element');
         }
     </script>
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-    <script src="app.js"></script>
     <script src="js/notifications.js"></script>
     <script src="js/simulation.js"></script>
     <script src="js/checklist.js"></script>
     <script src="js/chat.js"></script>
     <script src="js/education.js"></script>
     <script src="js/quiz.js"></script>
+    <script src="app.js"></script>
+    <!-- Google Translate Script -->
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     
     <style>
         /* Hide the top banner added by Google Translate */
