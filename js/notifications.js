@@ -55,8 +55,10 @@ export function addNotification(message, isUrgent = false) {
 
     notifications.unshift(notif);
     
-    // Maintain a max of 10 notifications for memory efficiency
-    if (notifications.length > 10) notifications.pop();
+    // Maintain a max of 5 notifications for UI cleanliness
+    while (notifications.length > 5) {
+        notifications.pop();
+    }
 
     updateNotifUI();
 
