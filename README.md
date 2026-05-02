@@ -91,6 +91,25 @@ graph TD
 
 ---
 
+## 🎯 Chosen Vertical
+**Social Impact & Civic Tech / Citizen Engagement**
+This project targets the democratization of information. By simplifying complex election procedures and providing real-time simulated guidance, ElectSmart aims to increase voter turnout and reduce friction at polling stations.
+
+## 🧠 Approach and Logic
+*   **PWA First:** We chose a Progressive Web App approach to ensure the solution is lightweight, mobile-friendly, and capable of working in areas with poor internet connectivity (offline mode).
+*   **Real-Time Modeling:** The dashboard uses a simulation engine to demonstrate how crowdsourced data could be used to optimize voter movement and reduce wait times.
+*   **Gamified Education:** We replaced long manuals with interactive EVM simulators and quizzes to make learning about the democratic process engaging for young and first-time voters.
+*   **Google Services Integration:** 
+    *   **Google Cloud Run:** Used for highly scalable, serverless deployment of the application container.
+    *   **Google Translate API:** Integrated to provide instant Hindi/English switching, making the app inclusive for India's diverse linguistic landscape.
+
+## 📌 Assumptions Made
+*   **Data Availability:** The real-time dashboard logic assumes that a crowdsourced or official API for booth congestion would be available in a production scenario.
+*   **Modern Browsers:** The app assumes users have access to browsers that support Service Workers and the Web Audio API (for the EVM beep).
+*   **One-Time Sync:** It assumes the user has internet access at least once to "install" the PWA and load the translation scripts.
+
+---
+
 ## 🚀 Running Locally
 
 Because the application is built with standard web technologies, there are no heavy frameworks or build steps required.
