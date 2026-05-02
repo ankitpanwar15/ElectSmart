@@ -34,10 +34,14 @@ Electo AI is built with a focus on professional software standards, security, an
 
 ## 🌟 Key Features
 - **AI Election Assistant:** Powered by **Google Gemini 1.5 Flash**, providing context-aware answers with local knowledge base fallback.
+- **Comprehensive Education Center:** Learn the voting process through a step-by-step Timeline, Educational Flashcards, Alternative Valid IDs, and an interactive Polling Booth Model.
 - **Interactive EVM Simulator:** A high-fidelity Electronic Voting Machine simulation with VVPAT paper trail animation and audio feedback.
-- **Real-Time Dashboard:** Simulated crowd density monitoring and booth queue estimation.
-- **Smart Checklist:** Personalized voter preparation guide with LocalStorage persistence.
-- **Multilingual Support:** Instant Hindi/English toggle via Google Translate API integration.
+- **Real-Time Dashboard:** Features a Smart Booth Locator (with live distance and optimal voting times), simulated live crowd density monitoring, and current booth wait times.
+- **Live News Updates:** Stay informed with a dynamic feed of the latest election news and alerts.
+- **Smart Checklist:** Personalized voter preparation guide with LocalStorage persistence to track your readiness.
+- **Interactive Quiz:** Test your knowledge about the Indian Election system with immediate feedback and scoring.
+- **Multilingual Support:** Instant Hindi/English toggle to democratize access to information.
+- **Notification System:** Real-time push alerts for system health, theme changes, and important actions.
 
 ---
 
