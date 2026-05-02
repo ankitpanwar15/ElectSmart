@@ -97,8 +97,8 @@ Because the application is built with standard web technologies, there are no he
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/ankitpanwar15/electsmart.git
-   cd electsmart
+   git clone https://github.com/ankitpanwar15/ElectSmart.git
+   cd ElectSmart
    ```
 
 2. **Start a local web server:**
