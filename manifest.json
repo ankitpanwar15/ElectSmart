@@ -1,0 +1,17 @@
+{
+    "name": "ElectSmart India",
+    "short_name": "ElectSmart",
+    "description": "Smart Dashboard and Educational Assistant for Indian Elections.",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#121212",
+    "icons": [
+      {
+        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjM2I4MmY2IiBkPSJNMTkyIDQwMGMtNi42IDAtMTItNS40LTEyLTEyVTEwNGMwLTYuNiA1LjQtMTIgMTItMTJzMTIgNS40IDEyIDEydjI4NGMwIDYuNi01LjQgMTItMTIgMTJ6bS04MCAwYy02LjYgMC0xMi01LjQtMTItMTJWMTg0YzAtNi42IDUuNC0xMiAxMi0xMnMxMiA1LjQgMTIgMTJ2MjA0YzAgNi42LTUuNCAxMi0xMiAxMnpNMzUyIDQwMGMtNi42IDAtMTItNS40LTEyLTEyVjI0NGMwLTYuNiA1LjQtMTIgMTItMTJzMTIgNS40IDEyIDEydjE0NGMwIDYuNi01LjQgMTItMTIgMTJ6bTgwIDBjLTYuNiAwLTEyLTUuNC0xMi0xMlYzNDRjMC02LjYgNS40LTEyIDEyLTEyczEyIDUuNCAxMiAxMnY0NGMwIDYuNi01LjQgMTItMTIgMTJ6bS0xNjAgMGMtNi42IDAtMTItNS40LTEyLTEyVjEzMmMwLTYuNiA1LjQtMTIgMTItMTJzMTIgNS40IDEyIDEydjI1NmMwIDYuNi01LjQgMTItMTIgMTJ6Ii8+PC9zdmc+",
+        "sizes": "192x192",
+        "type": "image/svg+xml",
+        "purpose": "any maskable"
+      }
+    ]
+  }

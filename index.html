@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectSmart India - Smart Voter Dashboard</title>
+    <meta name="description" content="Interactive guide and real-time dashboard for the Indian Election System.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-check-to-slot"></i>
+                <h2>ElectSmart</h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-target="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</li>
+                <li data-target="checklist"><i class="fa-solid fa-list-check"></i> My Checklist</li>
+                <li data-target="chat"><i class="fa-solid fa-robot"></i> AI Assistant</li>
+                <li data-target="education"><i class="fa-solid fa-book-open"></i> Learn System</li>
+                <li data-target="quiz"><i class="fa-solid fa-clipboard-question"></i> Quiz</li>
+            </ul>
+            <div class="network-status online" id="network-status">
+                <i class="fa-solid fa-wifi"></i> <span>Online</span>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <header>
+                <h1 id="page-title">Real-Time Dashboard</h1>
+                <div class="header-actions" style="display: flex; gap: 15px; align-items: center;">
+                    <button id="lang-toggle" class="btn" style="background-color: var(--border); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; border: 1px solid var(--accent);">हिंदी</button>
+                    <button id="notification-btn" class="icon-btn" aria-label="Notifications">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="badge hidden" id="notif-badge">0</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="scrollable-content">
+                <!-- Notifications Overlay -->
+                <div class="notifications-panel hidden" id="notifications-panel">
+                    <h3>Recent Alerts</h3>
+                    <ul id="notif-list"></ul>
+                </div>
+
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="view-section active">
+                    <div class="grid-layout">
+                        <!-- Booth Locator -->
+                        <div class="card booth-locator-card span-2" style="grid-column: span 3;">
+                            <h3><i class="fa-solid fa-location-crosshairs"></i> Find My Nearest Booth & Best Time</h3>
+                            <div class="booth-locator-content" id="booth-locator-content">
+                                <button id="locate-booth-btn" class="btn primary-btn"><i class="fa-solid fa-location-dot"></i> Locate Me</button>
+                                <div id="booth-result" class="hidden" style="margin-top: 15px;">
+                                    <div style="font-size: 1.2rem; font-weight: bold; color: var(--accent);" id="assigned-booth-name"></div>
+                                    <div style="color: var(--text-muted); margin-bottom: 10px;">Distance: <span id="booth-distance"></span> km</div>
+                                    <div class="movement-suggestion">
+                                        <i class="fa-regular fa-clock"></i>
+                                        <span id="best-time-suggestion"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Crowd Density Map Simulator -->
+                        <div class="card map-card span-2">
+                            <h3><i class="fa-solid fa-map-location-dot"></i> Live Polling Zone Density</h3>
+                            <div class="simulation-map" id="density-map">
+                                <!-- Zones will be injected here -->
+                            </div>
+                            <div class="movement-suggestion" id="movement-suggestion">
+                                <i class="fa-solid fa-route"></i>
+                                <span>Analyzing traffic patterns...</span>
+                            </div>
+                        </div>
+
+                        <!-- Wait Times -->
+                        <div class="card wait-times-card">
+                            <h3><i class="fa-solid fa-stopwatch"></i> Wait Times</h3>
+                            <ul class="wait-list" id="wait-list">
+                                <!-- Wait times injected here -->
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Checklist Section -->
+                <section id="checklist" class="view-section hidden">
+                    <div class="card">
+                        <div class="checklist-header">
+                            <h3><i class="fa-solid fa-calendar-check"></i> Personal Voter Deadlines</h3>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="checklist-progress"></div>
+                            </div>
+                        </div>
+                        <ul class="task-list" id="task-list">
+                            <!-- Tasks injected here -->
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- AI Chat Section -->
+                <section id="chat" class="view-section hidden">
+                    <div class="chat-container card">
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="message bot">
+                                Hello! I'm your Election Assistant. Ask me anything about the Indian election process, your polling booth, or voter IDs!
+                            </div>
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chat-input" placeholder="Type your question here...">
+                            <button id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                        <div class="suggested-questions">
+                            <span class="chip" onclick="document.getElementById('chat-input').value='What is VVPAT?'; document.getElementById('send-btn').click();">What is VVPAT?</span>
+                            <span class="chip" onclick="document.getElementById('chat-input').value='How to register to vote?'; document.getElementById('send-btn').click();">How to register?</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Education Section (Timeline & Flashcards) -->
+                <section id="education" class="view-section hidden">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="timeline">Process Timeline</button>
+                        <button class="tab-btn" data-tab="flashcards">Flashcards</button>
+                        <button class="tab-btn" data-tab="evm">EVM Simulator</button>
+                        <button class="tab-btn" data-tab="ids">Accepted IDs</button>
+                        <button class="tab-btn" data-tab="boothmodel">Booth Model</button>
+                    </div>
+                    
+                    <div id="tab-timeline" class="tab-content active">
+                        <div class="timeline" id="timeline-container">
+                            <!-- Timeline injected here -->
+                        </div>
+                    </div>
+
+                    <div id="tab-flashcards" class="tab-content hidden">
+                        <div class="flashcard-container" id="flashcard-container">
+                            <!-- Flashcards injected here -->
+                        </div>
+                        <div class="flashcard-controls">
+                            <button id="prev-card" class="btn"><i class="fa-solid fa-arrow-left"></i> Prev</button>
+                            <span id="card-counter">1 / 5</span>
+                            <button id="next-card" class="btn">Next <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <div id="tab-evm" class="tab-content hidden">
+                        <div class="evm-simulator-container">
+                            <div class="vvpat-machine">
+                                <div class="vvpat-window">
+                                    <div id="vvpat-slip" class="vvpat-slip hidden">
+                                        <div class="slip-content" id="slip-content">
+                                            <!-- Slip content injected here -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="vvpat-label">VVPAT</div>
+                            </div>
+                            
+                            <div class="evm-machine">
+                                <div class="evm-header">Ballot Unit</div>
+                                <div class="evm-body" id="evm-candidates">
+                                    <!-- Candidates injected here -->
+                                </div>
+                                <div class="evm-status">
+                                    <div class="ready-light" id="evm-ready-light"></div>
+                                    <span>Ready</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-ids" class="tab-content hidden">
+                        <h3 style="margin-bottom: 15px; color: var(--accent);">Valid Identity Proofs for Voting</h3>
+                        <p style="margin-bottom: 20px; color: var(--text-muted);">If you don't have your Voter ID (EPIC), you can still vote using any of these 11 alternative photo identity documents approved by the ECI:</p>
+                        <div class="id-grid" id="id-grid">
+                            <!-- IDs injected via JS -->
+                        </div>
+                    </div>
+
+                    <div id="tab-boothmodel" class="tab-content hidden">
+                        <h3 style="margin-bottom: 15px; color: var(--accent);">Polling Station Layout Model</h3>
+                        <p style="margin-bottom: 20px; color: var(--text-muted);">Understand the flow inside a polling booth to know exactly what happens on election day.</p>
+                        <div class="booth-model-container">
+                            <div class="booth-entrance">Entrance</div>
+                            <div class="officer-desk" style="top: 20px; left: 20px;">
+                                <strong>Polling Officer 1</strong><br>Checks your ID & Name in Electoral Roll
+                            </div>
+                            <div class="officer-desk" style="top: 100px; left: 20px;">
+                                <strong>Polling Officer 2</strong><br>Applies indelible ink, takes signature in register
+                            </div>
+                            <div class="officer-desk" style="top: 180px; left: 20px;">
+                                <strong>Polling Officer 3</strong><br>Takes your slip, enables the EVM
+                            </div>
+                            <div class="presiding-desk" style="top: 20px; right: 20px;">
+                                <strong>Presiding Officer</strong><br>Oversees entire process
+                            </div>
+                            <div class="voting-compartment" style="bottom: 20px; right: 20px;">
+                                <strong>Voting Compartment</strong><br>Secretly cast vote here on EVM & VVPAT
+                            </div>
+                            <div class="booth-exit">Exit</div>
+                            
+                            <!-- Path arrows -->
+                            <div class="path-arrow" style="top: 60px; left: 100px;">&darr;</div>
+                            <div class="path-arrow" style="top: 140px; left: 100px;">&darr;</div>
+                            <div class="path-arrow" style="top: 200px; left: 200px; transform: rotate(-90deg);">&rarr;</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quiz Section -->
+                <section id="quiz" class="view-section hidden">
+                    <div class="card quiz-card" id="quiz-container">
+                        <div class="quiz-header">
+                            <span class="quiz-score">Score: <span id="score-val">0</span></span>
+                            <span class="quiz-progress">Question <span id="q-current">1</span>/<span id="q-total">5</span></span>
+                        </div>
+                        <h3 id="question-text" class="question-text">Loading question...</h3>
+                        <div class="options-grid" id="options-container">
+                            <!-- Options injected here -->
+                        </div>
+                        <div id="quiz-feedback" class="quiz-feedback hidden"></div>
+                        <button id="next-q-btn" class="btn primary-btn hidden">Next Question</button>
+                    </div>
+                    <div class="card result-card hidden" id="result-container">
+                        <h2>Quiz Completed!</h2>
+                        <div class="final-score" id="final-score">0/5</div>
+                        <p id="result-message"></p>
+                        <button id="restart-quiz" class="btn primary-btn">Retake Quiz</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Hidden Google Translate Element -->
+    <div id="google_translate_element" style="display:none;"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'hi,en', autoDisplay: false}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script src="app.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/simulation.js"></script>
+    <script src="js/checklist.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/education.js"></script>
+    <script src="js/quiz.js"></script>
+    
+    <style>
+        /* Hide the top banner added by Google Translate */
+        .VIpgJd-Zvi9od-ORHb-OEVmcd { display: none !important; }
+        body { top: 0 !important; }
+    </style>
+</body>
+</html>
